@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MyApp</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+	<% if current_user %>
+    Logged in as <%= current_user.username %>.
+    <%= link_to "Log out", log_out_path %>
+  <% else %>
+    <%= link_to "Sign up", sign_up_path %> or
+    <%= link_to "log in", log_in_path %>
+  <% end %>
+
+	<p><%= flash[:notice] if flash[:notice].present? %></p>
+	<p id="success"><%= flash[:success] if flash[:success].present? %></p>
+	<p id="error"><%= flash[:error] if flash[:error].present? %></p>
+
+	<%= yield %>
+
+</body>
+</html>

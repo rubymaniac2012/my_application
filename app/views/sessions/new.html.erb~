@@ -1,0 +1,14 @@
+<h1>Log In</h1>
+
+<%= form_tag sessions_path do %>
+  <p>
+    <b><%= label_tag :Username %></b><br />
+    <%= text_field_tag :username, params[:username] %>
+  </p>
+  <p>
+    <b><%= label_tag :password %></b><br />
+    <%= password_field_tag :password %>
+  </p>
+  <p><%= submit_tag "Log in" %>
+     <%= link_to 'Back', root_url %></p>
+<% end %>

@@ -1,0 +1,65 @@
+class ProductsController < ApplicationController
+
+  before_filter :self_load, :only=>[:show,:edit,:update,:destroy]
+
+  before_filter :require_login, :only=>[:edit,:update,:destroy]
+
+  def index
+    find_user_products   
+  end
+
+  def search
+  	@products = current_user.products.where("title = ?",params[:q])
+  	render :partial=>'search'
+  end
+
+  def new
+    @product=current_user.products.build
+  end
+
+  def create
+    @product=current_user.products.new(params[:product])
+    if @product.save
+      redirect_to root_url, :notice=>'New Product has been added'
+    else
+      render :action=>'new'
+    end
+  end
+
+  def update
+    if @product.update_attributes(params[:product])
+      redirect_to root_url, :notice=>'Product has been updated.'
+    else
+      render :action => 'edit'
+    end
+  end
+
+  def destroy  
+    @product.destroy
+    respond_to do |format|
+     	format.html { redirect_to root_url }
+    	format.js
+    end
+  end
+
+  private
+  def self_load
+  	if current_user
+    	@product = current_user.products.find(params[:id])
+    else
+    	@product = Product.find(params[:id])
+    end
+  end
+
+  def require_login
+    redirect_to log_in_path, :notice=>'You are not authorised. Please log in' if !current_user
+  end
+
+	def find_user_products
+		if current_user==nil
+    	@products=Product.find(:all)
+		else
+			@products=current_user.products
+		end
+	end
+end
